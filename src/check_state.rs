@@ -41,7 +41,9 @@ where T: TapeStatusInfo + Send + Sync + 'static
 
                 for subscriber in subscribers.lock().await.values() {
                     let chat_id: ChatId = ChatId(subscriber.chat_id);
-                    bot.send_message(chat_id, response.clone()).await.unwrap();
+                    if let Err(_) = bot.send_message(chat_id, response.clone()).await {
+                        continue;
+                    }
 
                 }
             }
